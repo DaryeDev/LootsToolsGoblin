@@ -1,5 +1,5 @@
 chrome.browserAction.onClicked.addListener(function (tab) {
-    chrome.tabs.query({ //This method output active URL 
+    chrome.tabs.query({
         "active": true,
         "currentWindow": true,
         "status": "complete",
@@ -20,6 +20,6 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 
 function receiveText(resultsArray){
     token = resultsArray[0];    
-    console.log(token);
+    // console.log(token);
     chrome.tabs.update({url: "lootstools://login/"+token});
 }
