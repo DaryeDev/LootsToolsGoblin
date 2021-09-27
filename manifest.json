@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "manifest_version": 2,
     "author": "Darye",
-    "description": "An extension to login to Loot's Tools through your browser. Open 'streamloots.com', and click on the Extension Icon.",
+    "description": "A browser Extension to log in to Loot's Tools from the Streamloots page.",
     "homepage_url": "https://daryedev.github.io/LootsTools/",
     "background": {
       "scripts": [
