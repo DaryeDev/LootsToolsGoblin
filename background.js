@@ -1,5 +1,5 @@
-chrome.browserAction.onClicked.addListener(function (tab) {
-    chrome.tabs.query({ //This method output active URL 
+browser.browserAction.onClicked.addListener(function (tab) {
+    browser.tabs.query({
         "active": true,
         "currentWindow": true,
         "status": "complete",
@@ -8,7 +8,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
         for (tab in tabs) {
             var domain = tabs[tab].url.match(/^[\w-]+:\/{2,}\[?([\w\.:-]+)\]?(?::[0-9]*)?/)[1];
             if (domain == "www.streamloots.com") {
-                chrome.tabs.executeScript(tab.ib, {
+                browser.tabs.executeScript(tab.ib, {
                     file: 'inject.js'
                 }, receiveText);
             } else {
@@ -20,6 +20,6 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 
 function receiveText(resultsArray){
     token = resultsArray[0];    
-    console.log(token);
-    chrome.tabs.update({url: "lootstools://login/"+token});
+    // console.log(token);
+    browser.tabs.update({url: "lootstools://login/"+token});
 }
