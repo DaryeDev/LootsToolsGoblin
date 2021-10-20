@@ -20,7 +20,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 
 function receiveText(resultsArray){
     token = resultsArray[0];
-    if (token != ""){
+    if (token){
         browser.tabs.update({url: "lootstools://login/"+token});
     }
     else{
