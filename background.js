@@ -19,7 +19,11 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 });
 
 function receiveText(resultsArray){
-    token = resultsArray[0];    
-    // console.log(token);
-    chrome.tabs.update({url: "lootstools://login/"+token});
+    token = resultsArray[0];
+    if (token != ""){
+        browser.tabs.update({url: "lootstools://login/"+token});
+    }
+    else{
+        alert("Log in to Streamloots first.")
+    }
 }
