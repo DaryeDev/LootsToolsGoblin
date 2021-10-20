@@ -6,6 +6,7 @@ browser.browserAction.onClicked.addListener(function (tab) {
         "windowType": "normal"
     }, function (tabs) {
         for (tab in tabs) {
+            console.log(tabs[tab].url);
             var domain = tabs[tab].url.match(/^[\w-]+:\/{2,}\[?([\w\.:-]+)\]?(?::[0-9]*)?/)[1];
             if (domain == "www.streamloots.com") {
                 browser.tabs.executeScript(tab.ib, {
@@ -19,7 +20,11 @@ browser.browserAction.onClicked.addListener(function (tab) {
 });
 
 function receiveText(resultsArray){
-    token = resultsArray[0];    
-    // console.log(token);
-    browser.tabs.update({url: "lootstools://login/"+token});
+    token = resultsArray[0];
+    if (token != ""){
+        browser.tabs.update({url: "lootstools://login/"+token});
+    }
+    else{
+        alert("Log in to Streamloots first.")
+    }
 }
