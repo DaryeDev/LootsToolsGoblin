@@ -6,7 +6,6 @@ browser.browserAction.onClicked.addListener(function (tab) {
         "windowType": "normal"
     }, function (tabs) {
         for (tab in tabs) {
-            console.log(tabs[tab].url);
             var domain = tabs[tab].url.match(/^[\w-]+:\/{2,}\[?([\w\.:-]+)\]?(?::[0-9]*)?/)[1];
             if (domain == "www.streamloots.com") {
                 browser.tabs.executeScript(tab.ib, {
