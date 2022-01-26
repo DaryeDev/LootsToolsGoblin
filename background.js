@@ -58,7 +58,13 @@ function receiveText(resultsArray){
                             if (tries == 0) {
                                 tries += 1;
                                 chrome.tabs.query({currentWindow: true, active: true}, function (tab) {
-                                    chrome.tabs.update(tab.id, {url: "lootstools://"});
+                                    chrome.tabs.query({url: "https://lootstools.darye.dev/"}, function(tabs){
+                                        if (tabs.length == 0) {
+                                            chrome.tabs.update(tab.id, {url: "lootstools://init"});
+                                        } else {
+                                            chrome.tabs.update(tab.id, {url: "lootstools://"});
+                                        }
+                                    })
                               });
                               
                             
