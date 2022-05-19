@@ -36,7 +36,6 @@ function receiveText(resultsArray){
     token = resultsArray[0];
     window.open("lootstools://", "_self");
     if (token){
-        console.log(token)
         // browser.tabs.update({url: "lootstools://login/"+token});
         var tokenSent = false
         var tries = 0
