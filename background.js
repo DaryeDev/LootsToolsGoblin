@@ -1,10 +1,10 @@
 var domain = ""
 var SLTab = null
 
-chrome.browserAction.onClicked.addListener(function (tab) {
-    injectToStreamloots()
-});
-
+// chrome.browserAction.onClicked.addListener(function (tab) {
+//     injectToStreamloots()
+// });
+console.log
 function injectToStreamloots() {
     chrome.tabs.query({
         "active": true,
