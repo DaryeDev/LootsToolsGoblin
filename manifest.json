@@ -5,9 +5,10 @@
     "author": "Darye",
     "description": "Enhance your Streamloots experience and login to Loot's Tools with Loot's Tools Browser Companion.",
     "homepage_url": "https://lootstools.darye.dev",
-    "icons": { "16": "icons/goblin16.png",
-        "48": "icons/goblin48.png",
-       "128": "icons/goblin128.png" },
+    "icons": { 
+      "16": "icons/goblin16.png",
+      "48": "icons/goblin48.png",
+      "128": "icons/goblin128.png" },
     "action": {
       "default_icon": "icons/goblin128.png",
       "default_title": "Loot's Tools Browser Companion",
@@ -16,10 +17,23 @@
     "permissions": [
       "activeTab",
       "tabs",
-      "scripting"
+      "scripting",
+      "storage",
+      "alarms"
     ],
     "content_security_policy": {
       "default-src": "self",
       "script-src": "self"
+    },
+    "background": {
+      "service_worker": "background.js"
+    },
+    "externally_connectable": {
+      "ids": [],
+      "matches": [
+        "https://*.darye.dev/*",
+        "https://dysontools.herokuapp.com/*"
+      ],
+      "accepts_tls_channel_id": false
     }
   }

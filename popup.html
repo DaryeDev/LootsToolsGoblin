@@ -1,10 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Loot's Tools Browser Companion</title>
-</head>
-<body>
-    <script src="./background.js"></script>
-    <button onclick="console.log('click')">test</button>
-</body>
+    <head>
+        <title>Loot's Tools Browser Companion</title>
+        <script type="text/javascript" src="jquery.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&display=swap" rel="stylesheet">
+    </head>
+    <body style="font-family: 'Montserrat', sans-serif;">
+        <div id="notLoggedIn">
+            <button id="loginButton">Log in with Streamloots</button>
+        </div>
+        <div id="loggedIn" hidden>
+            <div id="title" style="display: block;margin-left: auto;margin-right: auto;width: 442px">
+                <img src="https://lootstools.darye.dev/docs/NEW_Logo.svg" alt="" style="height: 50px;">
+                <h1 id="" style="font-weight: 200;position: absolute;top: 1px;left: 90px;">Loot's Tools Browser Companion</h1>
+            </div>
+            
+            <h1 id="helloText">Hey {user}!</h1>
+            <hr>
+            <div id="lootstools">
+                <h2 id="lootstoolsTitle">Loot's Tools:</h2>
+                <div id="lootstoolsSection">
+                    <button id="openLootsToolsButton">Open Loot's Tools</button>
+                    <button id="openLootsToolsNoUIButton">Open Loot's Tools (no UI)</button>
+                    <button id="loginLootsToolsButton">Login to Loot's Tools</button>
+                </div>
+                <br id="lootstoolsBr">
+            </div>
+            <hr>
+            <div id="utils">
+                <h2 id="utilsTitle">Utils:</h2>
+                <div id="utilsSection">
+                    <button id="syncStreamlootsDiscordButton">Sync Streamloots and Discord Accounts</button>
+                </div>
+                <br id="utilsBr">
+            </div>
+            <hr>
+            <button id="logoutButton">Log out </button>
+        </div>
+        <script src="./stuff.js"></script>
+    </body>
 </html>
