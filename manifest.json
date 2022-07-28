@@ -1,25 +1,27 @@
 {
-    "name": "Login to Loot's Tools",
-    "version": "1.1.4",
+    "name": "Loot's Tools Browser Companion",
+    "version": "2",
     "manifest_version": 2,
     "author": "Darye",
-    "description": "An extension to login to Loot's Tools through your browser. Open 'streamloots.com', and click on the Extension Icon.",
-    "homepage_url": "https://lootstools.darye.dev/docs",
-    "background": {
-      "scripts": [
-        "background.js"
-      ],
-      "persistent": true
-    },
-    "icons": { "16": "icons/goblin16.png",
-        "48": "icons/goblin48.png",
-       "128": "icons/goblin128.png" },
+    "description": "Enhance your Streamloots experience and login to Loot's Tools with Loot's Tools Browser Companion.",
+    "homepage_url": "https://lootstools.darye.dev",
+    "icons": { 
+      "16": "icons/goblin16.png",
+      "48": "icons/goblin48.png",
+      "128": "icons/goblin128.png" },
     "browser_action": {
       "default_icon": "icons/goblin128.png",
-      "default_title": "Login to Loot's Tools"
+      "default_title": "Loot's Tools Browser Companion",
+      "default_popup": "popup.html"
     },
     "permissions": [
       "activeTab",
-      "tabs"
-    ]
+      "tabs",
+      "scripting",
+      "storage",
+      "alarms"
+    ],
+    "background": {
+      "scripts": ["background.js"]
+    }
   }
