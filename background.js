@@ -62,6 +62,46 @@ function handleExternalMessage(request, sender, sendResponse) {
             })
             .catch(error => console.log('error', error));
         })
+    } else if ("getUserInfo" in request) {
+        chrome.storage.sync.get(["token"], function (result) {
+            token = result.token
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", "Bearer "+token);
+
+            var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+            };
+
+            fetch("https://api.streamloots.com/me", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                sendResponse(result);
+            })
+            .catch(error => console.log('error', error));
+        })
+    } else if ("testCard" in request) {
+        chrome.storage.sync.get(["token"], function (result) {
+            token = result.token
+            collectionID = request["testCard"][0]
+            cardID = request["testCard"][1]
+
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", "Bearer "+token);
+
+            var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            redirect: 'follow'
+            };
+            fetch("https://api.streamloots.com/sets/"+collectionID+"/cards/"+cardID+"/test-redemptions", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                sendResponse(result);
+            })
+            .catch(error => console.log('error', error));
+        })
     }
 }
 chrome.runtime.onMessage.addListener(handleMessage);
