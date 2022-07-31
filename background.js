@@ -1,7 +1,7 @@
 var domain = "";
 var SLTab = null;
 var token = false;
-var userInfo = false;
+
 
 
 function handleMessage(request, sender, sendResponse) {
@@ -13,8 +13,56 @@ function handleMessage(request, sender, sendResponse) {
 function handleExternalMessage(request, sender, sendResponse) {
     if ("registerDiscordServer" in request){
         registerDiscordServer(request.registerDiscordServer)
+        sendResponse({response: true});
+    } else if ("getCards" in request) {
+        chrome.storage.sync.get(["token"], function (result) {
+            token = result.token
+            var collectionArray = [];
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", "Bearer "+token);
+
+            var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+            };
+
+            fetch("https://api.streamloots.com/me", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+
+                fetch("https://api.streamloots.com/sets?slug="+result["page"]["slug"], requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    var collections = result["data"];
+                    for (let collectionNo = 0; collectionNo < collections.length; collectionNo++) {
+                        const collection = collections[collectionNo];
+                        var collectionID = collection._id;
+                        var collectionName = collection.name;
+                        var collectionImage = collection.imageUrl;
+                        var fullJSON = collection;
+                        var cards = [];
+                        for (let cardNo = 0; cardNo < collection.cards.length; cardNo++) {
+                            const card = collection.cards[cardNo];
+                            var cardID = card._id;
+                            var cardName = card.name;
+                            var cardImage = card.imageUrl;
+                            var cardDescription = card.description;
+                            var cardRarity = card.rarity;
+                            cards.push({"cardID": cardID, "cardName": cardName, "cardImage": cardImage, "cardDescription": cardDescription, "cardRarity": cardRarity, "isEnhanced": true});
+                        }
+                        collectionArray.push({"collectionID": collectionID, "collectionName": collectionName, "collectionImage": collectionImage, "cards": cards, "fullJSON": fullJSON});
+                    }
+
+                    console.log(collectionArray);
+                    sendResponse(collectionArray);
+                })
+                .catch(error => console.log('error', error));
+
+            })
+            .catch(error => console.log('error', error));
+        })
     }
-    sendResponse({response: "Oído cocina!"});
 }
 chrome.runtime.onMessage.addListener(handleMessage);
 chrome.runtime.onMessageExternal.addListener(handleExternalMessage);
