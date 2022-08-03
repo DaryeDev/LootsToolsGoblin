@@ -17,7 +17,7 @@ function handleExternalMessage(request, sender, sendResponse) {
     } else if ("getCards" in request) {
         chrome.storage.sync.get(["token"], function (result) {
             token = result.token
-            if (token == undefined){
+            if (!token){
                 sendResponse("noLogin")
             } else {
                 var collectionArray = [];
@@ -69,7 +69,7 @@ function handleExternalMessage(request, sender, sendResponse) {
     } else if ("getUserInfo" in request) {
         chrome.storage.sync.get(["token"], function (result) {
             token = result.token
-            if (token == undefined){
+            if (!token){
                 sendResponse("noLogin")
             } else {
                 var myHeaders = new Headers();
@@ -91,9 +91,9 @@ function handleExternalMessage(request, sender, sendResponse) {
             
         })
     } else if ("testCard" in request) {
-        chrome.storage.sync.get(["token"], function (result) {
-            token = result.token
-            if (token == undefined){
+        chrome.storage.sync.get(["token"], function (resulto) {
+            token = resulto.token
+            if (!token){
                 sendResponse("noLogin")
             } else {
                 collectionID = request["testCard"][0]
@@ -108,11 +108,15 @@ function handleExternalMessage(request, sender, sendResponse) {
                 redirect: 'follow'
                 };
                 fetch("https://api.streamloots.com/sets/"+collectionID+"/cards/"+cardID+"/test-redemptions", requestOptions)
-                .then(response => response.json())
+                .then(response => response.text())
                 .then(result => {
+                    console.log(result);
                     sendResponse(result);
                 })
-                .catch(error => console.log('error', error));
+                .catch(error => {
+                    sendResponse({"error": error.message});
+                    console.log('error', error)
+                });
             }
         })
     }
