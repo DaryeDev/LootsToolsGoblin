@@ -25,7 +25,7 @@ function handleExternalMessage(request, sender, sendResponse) {
                     headers: {},
                     mode: "no-cors"
                 })
-                .then((response) => function (response) {
+                .then((response) => {
                     console.log("sentRegistration");
                     sendResponse({response: true});
                 })
