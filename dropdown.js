@@ -66,8 +66,7 @@ function textFields2Dropdowns(optionsObj) {
 
             a.parentElement.insertBefore(select, a);
             a.style.display = "none";
-            aId = a.id
-            selectId = select.id
+
             select.addEventListener("change", function () {
                 var input = document.querySelector('#'+this.id.replace("dropdown", "redeem-"));
                 var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
@@ -81,21 +80,21 @@ function textFields2Dropdowns(optionsObj) {
                 .addEventListener("DOMCharacterDataModified", function (event) {
                     if (event.newValue.startsWith("0")) {
                         console.log(event.target);
-                        change = function () {
-                            var input = document.querySelector('#'+aId);
+                        change = function(event) {
+                            var input = event.target.parentElement.parentElement.previousSibling
                             var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
                                 window.HTMLInputElement.prototype,
                                 "value"
                             ).set;
                             nativeInputValueSetter.call(
                                 input,
-                                document.querySelector('#'+selectId).value
+                                input.previousSibling.value
                             );
                             var ev2 = new Event("input", { bubbles: true });
                             input.dispatchEvent(ev2);
-                            if (event.target.textContent == event.newValue) { window.setTimeout(change, 10) } else { console.log("yata") }
+                            if (event.target.textContent.startsWith("0")) { window.setTimeout(change, 10, event) } else { console.log("yata") }
                         }
-                        window.setTimeout(change, 10)
+                        window.setTimeout(change, 10, event)
                     }
                 });
         }
