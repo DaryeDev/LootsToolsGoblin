@@ -1,4 +1,4 @@
-console.log("webo")
+console.log("<Loot's Tools Browser Companion> Dropdown Module loaded!")
 function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
@@ -78,7 +78,6 @@ function textFields2Dropdowns(optionsObj) {
             for (input in document.querySelectorAll("[class*=input__info__length]")) {
                 try {
                     var a = document.querySelectorAll("[class*=input__info__length]")[parseInt(input)];
-                    console.log(a)
                     if (a) {
                         inputInfos.push(a);
                     } else {break}
@@ -89,10 +88,8 @@ function textFields2Dropdowns(optionsObj) {
             }
 
             for (inputNo in inputInfos) {
-                console.log(inputInfos[inputNo])
                 inputInfos[inputNo].addEventListener("DOMCharacterDataModified", function (event) {
                     if (event.newValue.startsWith("0")) {
-                        console.log(event.target);
                         change = function(event, input) {
                             var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
                                 window.HTMLInputElement.prototype,
@@ -104,7 +101,7 @@ function textFields2Dropdowns(optionsObj) {
                             );
                             var ev2 = new Event("input", { bubbles: true });
                             input.dispatchEvent(ev2);
-                            if (event.target.textContent.startsWith("0")) { window.setTimeout(change, 10, event, event.target.parentElement.parentElement.previousSibling) } else { console.log("yata") }
+                            if (event.target.textContent.startsWith("0")) { window.setTimeout(change, 10, event, event.target.parentElement.parentElement.previousSibling) } else {}
                         }
                         window.setTimeout(change, 10, event, event.target.parentElement.parentElement.previousSibling)
                     }
@@ -157,13 +154,12 @@ function getCard(cardName, cardDescription, callback) {
                         fetch("https://api.streamloots.com/sets/" + collection._id + "/cards", requestOptions)
                             .then(response => response.json())
                             .then(result => {
-                                console.log("cards " + collection.name)
+                                // console.log("cards " + collection.name)
                                 // console.log(result)
                                 result.forEach(card => {
                                     // if ((card.name == document.querySelector("#set-card-edit-card-name").value) && (card.description == document.querySelector("#set-card-edit-card-description").innerHTML) && (card.imageUrl == document.querySelectorAll("[class*=preview__image]")[0].src)) {
                                     if ((card.name == cardName) && (card.description == cardDescription)) {
                                         collectionID = collection._id
-                                        console.log(collectionID)
                                         cardID = card._id
                                         cardObj = card
                                         breakItDown = true
