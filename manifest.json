@@ -39,7 +39,7 @@
     "content_scripts": [
       {
         "matches": ["https://*.streamloots.com/*"],
-        "js": ["additionalInputs.js"]
+        "js": ["additionalFieldTypes.js"]
       }
     ]
   }
