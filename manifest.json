@@ -1,6 +1,6 @@
 {
     "name": "Loot's Tools Browser Companion",
-    "version": "2.2.2",
+    "version": "2.3",
     "manifest_version": 3,
     "author": "Darye",
     "description": "Enhance your Streamloots experience and login to Loot's Tools with Loot's Tools Browser Companion.",
@@ -35,5 +35,11 @@
         "https://dysontools.herokuapp.com/*"
       ],
       "accepts_tls_channel_id": false
-    }
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://*.streamloots.com/*"],
+        "js": ["dropdown.js"]
+      }
+    ]
   }

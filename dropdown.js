@@ -1,3 +1,4 @@
+console.log("webo")
 function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
@@ -18,7 +19,7 @@ function getInitialState() {
 
 function textFields2Dropdowns(optionsObj) {
     var inputs = [];
-    
+
     for (input in document.querySelectorAll("form")[0]) {
         try {
             if (parseInt(input) != NaN) {
@@ -39,14 +40,14 @@ function textFields2Dropdowns(optionsObj) {
         redeemField = a.id.replace("redeem-", "")
         if (redeemField in optionsObj) {
             options = optionsObj[redeemField]
-        
+
             select = document.createElement("select");
             select.innerHTML = "";
             select.className = a.className;
             select.name = a.name;
-            select.id = "dropdown"+redeemField;
+            select.id = "dropdown" + redeemField;
             select.style = a.style;
-            
+
             for (optionNo in options) {
                 option = document.createElement("option");
                 option.value = option.innerHTML = options[optionNo];
@@ -65,34 +66,38 @@ function textFields2Dropdowns(optionsObj) {
 
             a.parentElement.insertBefore(select, a);
             a.style.display = "none";
-            eval(
-                `select.addEventListener("change", function(){var input = document.querySelector('#${a.id}');var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;nativeInputValueSetter.call(input, this.value);var ev2 = new Event('input', { bubbles: true});input.dispatchEvent(ev2);})`
-            );
-            eval(
-                `document
+            aId = a.id
+            selectId = select.id
+            select.addEventListener("change", function () {
+                var input = document.querySelector('#'+this.id.replace("dropdown", "redeem-"));
+                var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                nativeInputValueSetter.call(input, this.value);
+                var ev2 = new Event('input', { bubbles: true });
+                input.dispatchEvent(ev2);
+            })
+            document
                 .querySelectorAll("[class*=input__info]")[0]
                 .getElementsByTagName("div")[0]
                 .addEventListener("DOMCharacterDataModified", function (event) {
                     if (event.newValue.startsWith("0")) {
-                        console.log("webo");
-                        change = function() {
-                            var input = document.querySelector("#${a.id}");
+                        console.log(event.target);
+                        change = function () {
+                            var input = document.querySelector('#'+aId);
                             var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
                                 window.HTMLInputElement.prototype,
                                 "value"
                             ).set;
                             nativeInputValueSetter.call(
                                 input,
-                                document.querySelector("#${select.id}").value
+                                document.querySelector('#'+selectId).value
                             );
                             var ev2 = new Event("input", { bubbles: true });
                             input.dispatchEvent(ev2);
-                            if (event.target.textContent == event.newValue) {window.setTimeout(change, 10)} else {console.log("yata")}
+                            if (event.target.textContent == event.newValue) { window.setTimeout(change, 10) } else { console.log("yata") }
                         }
                         window.setTimeout(change, 10)
                     }
-                });`
-            );
+                });
         }
     }
 }
@@ -153,18 +158,18 @@ function getCard(cardName, cardDescription, callback) {
                                         callback(collectionID, cardID, cardObj);
                                         // console.log(cardID)
                                     }
-                                    
+
                                     if (breakItDown) {
                                         return
                                     }
-                                    if (window.location.pathname.includes("/"+userName+"/collection/")) {
+                                    if (window.location.pathname.includes("/" + userName + "/collection/")) {
                                         return;
                                     }
                                 });
                                 if (breakItDown) {
                                     return
                                 }
-                                if (window.location.pathname.includes("/"+userName+"/collection/")) {
+                                if (window.location.pathname.includes("/" + userName + "/collection/")) {
                                     return;
                                 }
                             })
@@ -189,11 +194,11 @@ function foo(event) {
                     options[redeemField.name] = redeemField.dropdownOptions
                 }
             });
-            
-            
+
+
             textFields2Dropdowns(options);
         })
-        
+
     } else if (((event.path[0].innerHTML.includes("#edit") && event.path[0].className.includes("redeem-fields__edit-btn")) || (event.path[1].innerHTML.includes("#edit") && event.path[0].innerHTML.includes("Edit") && event.path[0].className.includes("button--icon__label")))) {
         addFieldButton = document.querySelectorAll("[class*=redeem-fields__add-btn]")[0]
 
@@ -248,7 +253,7 @@ function foo(event) {
 
                 fetch("https://api.streamloots.com/sets/" + collectionID + "/cards/" + cardID, requestOptions)
                     .then(response => response.json())
-                    .then(result => { 
+                    .then(result => {
                         // console.log(result)
                     })
                     .catch(error => console.log('error', error));
