@@ -1,4 +1,4 @@
-console.log("<Loot's Tools Browser Companion> Dropdown Module loaded!")
+console.log("[Loot's Tools Browser Companion] Dropdown Module loaded!")
 function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
