@@ -19,7 +19,6 @@ function getInitialState() {
 
 function textFields2Dropdowns(optionsObj) {
     var inputs = [];
-
     for (input in document.querySelectorAll("form")[0]) {
         try {
             if (parseInt(input) != NaN) {
@@ -74,14 +73,27 @@ function textFields2Dropdowns(optionsObj) {
                 var ev2 = new Event('input', { bubbles: true });
                 input.dispatchEvent(ev2);
             })
-            document
-                .querySelectorAll("[class*=input__info]")[0]
-                .getElementsByTagName("div")[0]
-                .addEventListener("DOMCharacterDataModified", function (event) {
+            
+            var inputInfos = [];
+            for (input in document.querySelectorAll("[class*=input__info__length]")) {
+                try {
+                    var a = document.querySelectorAll("[class*=input__info__length]")[parseInt(input)];
+                    console.log(a)
+                    if (a) {
+                        inputInfos.push(a);
+                    } else {break}
+                    
+                } catch (error) {
+                    break;
+                }
+            }
+
+            for (inputNo in inputInfos) {
+                console.log(inputInfos[inputNo])
+                inputInfos[inputNo].addEventListener("DOMCharacterDataModified", function (event) {
                     if (event.newValue.startsWith("0")) {
                         console.log(event.target);
-                        change = function(event) {
-                            var input = event.target.parentElement.parentElement.previousSibling
+                        change = function(event, input) {
                             var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
                                 window.HTMLInputElement.prototype,
                                 "value"
@@ -92,11 +104,12 @@ function textFields2Dropdowns(optionsObj) {
                             );
                             var ev2 = new Event("input", { bubbles: true });
                             input.dispatchEvent(ev2);
-                            if (event.target.textContent.startsWith("0")) { window.setTimeout(change, 10, event) } else { console.log("yata") }
+                            if (event.target.textContent.startsWith("0")) { window.setTimeout(change, 10, event, event.target.parentElement.parentElement.previousSibling) } else { console.log("yata") }
                         }
-                        window.setTimeout(change, 10, event)
+                        window.setTimeout(change, 10, event, event.target.parentElement.parentElement.previousSibling)
                     }
                 });
+            }
         }
     }
 }
