@@ -309,7 +309,7 @@ function clickManager(event) {
             })
 
             convertFunction = function (event) {
-                if (document.querySelectorAll("[class*=toolbox__test]")[0].disabled) {
+                if (!document.querySelectorAll("[class*=toolbox__test]")[0].disabled) {
                     if (event.target.localName != "select") {
                         alert("The field change will only be visible for users with the Loot's Tools Browser Companion browser extension installed.\n\nThe rest of them will see a text field, so a tip of the possible values for them will be useful.")
                         var fieldName = ""
@@ -413,7 +413,7 @@ function clickManager(event) {
             }
 
             revertFunction = function (event) {
-                if (document.querySelectorAll("[class*=toolbox__test]")[0].disabled) {
+                if (!document.querySelectorAll("[class*=toolbox__test]")[0].disabled) {
                     if (event.target.localName != "select") {
                         var fieldName = ""
                         try {
