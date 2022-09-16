@@ -164,8 +164,8 @@ function textField2Number(redeemID, min=0, max=Infinity) {
                 this.value.substring(0, position - 1) + this.value.substring(position, str.length)
             }
         }
-        if (this.valueAsNumber < parseInt(this.min)) {console.log("min");this.valueAsNumber = parseInt(this.min)}
-        if (this.valueAsNumber > parseInt(this.max)) {console.log("max");this.valueAsNumber = parseInt(this.max)}
+        if (this.valueAsNumber < parseInt(this.min)) {this.valueAsNumber = parseInt(this.min)}
+        if (this.valueAsNumber > parseInt(this.max)) {this.valueAsNumber = parseInt(this.max)}
         modifyFormTextInput(document.querySelector('#' + this.id.replace("number", "redeem-")), this.value)
     })
     writeCustomElementValueOnSend()
@@ -227,7 +227,17 @@ function getCard(cardName, cardDescription, callback) {
 function clickManager(event) {
     // console.log(event.target)
     try {
-        if (event.target.className.includes("card__image")) {
+        try {
+            var testCardClicked = (document.querySelectorAll("[class*=toolbox__content]")[2].innerHTML.includes(event.path[0].innerHTML) && event.path[0].innerHTML.toLowerCase().includes("test"));
+        } catch (error) {
+            var testCardClicked = false;
+        }
+        try {
+            var editCardClicked = document.querySelectorAll("[class*=toolbox__content]")[2].innerHTML.includes(event.path[0].innerHTML) && event.path[0].innerHTML.toLowerCase().includes("edit");
+        } catch (error) {
+            var editCardClicked = false;
+        }
+        if (event.target.className.includes("card__image") || testCardClicked) {
             getCard(document.querySelectorAll("[class*=cardinfo__title]")[0].innerHTML, document.querySelectorAll("[class*=cardinfo__infoarea]")[0].getElementsByTagName('p')[0].innerHTML, function (collectionID, cardID, cardObj) {
                 // console.log(cardObj.redeemFields[0])
                 options = {}
@@ -256,7 +266,7 @@ function clickManager(event) {
                 });
             })
 
-        } else if (document.querySelectorAll("[class*=toolbox__content]")[2].innerHTML.includes(event.path[0].innerHTML) && event.path[0].innerHTML.toLowerCase().includes("edit")) {
+        } else if (editCardClicked) {
             addFieldButton = document.querySelectorAll("[class*=redeem-fields__add-btn]")[0]
 
             convertButton = document.createElement("button")
@@ -299,117 +309,61 @@ function clickManager(event) {
             })
 
             convertFunction = function (event) {
-                if (event.target.localName != "select") {
-                    alert("The field change will only be visible for users with the Loot's Tools Browser Companion browser extension installed.\n\nThe rest of them will see a text field, so a tip of the possible values for them will be useful.")
-                    var fieldName = ""
-                    var fieldType = ""
-                    try {
-                        fieldName = event.target.children[0].value
-                        fieldType = event.target.children[1].value
-                        if (!fieldName) {throw "fieldNameUndefined";}
-                    } catch (error) {
-                        fieldName = event.target.children[1].children[0].value
-                        fieldType = event.target.children[1].children[1].value
-                    }
-                    var additionalFieldTypes = {}
-                    switch (fieldType.toLowerCase()) {
-                        case "dropdown":
-                            optionList = []
-                            while (true) {
-                                item = prompt("The list is currently " + JSON.stringify(optionList) + ".\nAdd a new Item to the list:\n(Click Cancel or leave the field blank to end the List.)")
-                                if (item != null && item != "") {
-                                    optionList.push(item)
-                                } else {
-                                    break
-                                }
-                            }
-                            additionalFieldTypes[fieldName] = {"type": "dropdown", "data": optionList}
-                            break;
-                    
-                        case "number":
-                            var min = prompt("Want to put a minimum value?\n\n(Default: 0. Leave blank to leave the default value.)")
-                            var max = prompt("Want to put a maximum value?\n\n(Default: Infinity. Leave blank to leave the default value.)")
-                            additionalFieldTypes[fieldName] = {"type": "number", "data": [min, max]}
-                            break;
-                    
-                        case "file":
-                            getCard(document.querySelector("#set-card-edit-card-name").value, document.querySelector("#set-card-edit-card-description").innerHTML, function (collectionID, cardID, cardObj) {
-                                for (let index = 0; index < cardObj.redeemFields.length; index++) {
-                                    if (cardObj.redeemFields[index].name == fieldName){
-                                            if (cardObj.redeemFields[index].type == "TEXTAREA") {
-                                                additionalFieldTypes[fieldName] = {"type": "file"}
-                                            } else {
-                                                alert("The File Field Type needs to be applied to a bigger text field. Change the type and try it again.")
-                                                updateCollectionsUsername()
-                                            }
+                if (document.querySelectorAll("[class*=toolbox__test]")[0].disabled) {
+                    if (event.target.localName != "select") {
+                        alert("The field change will only be visible for users with the Loot's Tools Browser Companion browser extension installed.\n\nThe rest of them will see a text field, so a tip of the possible values for them will be useful.")
+                        var fieldName = ""
+                        var fieldType = ""
+                        try {
+                            fieldName = event.target.children[0].value
+                            fieldType = event.target.children[1].value
+                            if (!fieldName) {throw "fieldNameUndefined";}
+                        } catch (error) {
+                            fieldName = event.target.children[1].children[0].value
+                            fieldType = event.target.children[1].children[1].value
+                        }
+                        var additionalFieldTypes = {}
+                        switch (fieldType.toLowerCase()) {
+                            case "dropdown":
+                                optionList = []
+                                while (true) {
+                                    item = prompt("The list is currently " + JSON.stringify(optionList) + ".\nAdd a new Item to the list:\n(Click Cancel or leave the field blank to end the List.)")
+                                    if (item != null && item != "") {
+                                        optionList.push(item)
+                                    } else {
+                                        break
                                     }
                                 }
-                            })
-                            debugger
-                            break;
-                    
-                        default:
-                            break;
-                    }
-                    
-                    // console.log(optionList)
-
-                    getCard(document.querySelector("#set-card-edit-card-name").value, document.querySelector("#set-card-edit-card-description").innerHTML, function (collectionID, cardID, cardObj) {
-                        // console.log(collectionID)
-                        // console.log(cardID)
-                        // console.log(cardObj)
-                        cardID = cardObj._id
-                        try {
-                            ["_id", "activatedAt", "archived", "createdAt", "count", "deactivated", "deactivatedAt", "firstActivatedAt", "imageFile", "modifiedAt", "normalizedName", "setId", "status", "usageStatistics", "redemptionLimit"].forEach(element => {
-                                try { delete cardObj[element] } catch (error) { }
-                            });
-                        } catch (error) { }
-
-                        for (let index = 0; index < cardObj.redeemFields.length; index++) {
-                            const redeemField = cardObj.redeemFields[index];
-                            console.log(redeemField)
-                            if (redeemField.name in additionalFieldTypes) {
-                                cardObj.redeemFields[index]["additionalFieldTypesLT"] = additionalFieldTypes[redeemField.name]
-                                console.log(redeemField)
-                            }
+                                additionalFieldTypes[fieldName] = {"type": "dropdown", "data": optionList}
+                                break;
+                        
+                            case "number":
+                                var min = prompt("Want to put a minimum value?\n\n(Default: 0. Leave blank to leave the default value.)")
+                                var max = prompt("Want to put a maximum value?\n\n(Default: Infinity. Leave blank to leave the default value.)")
+                                additionalFieldTypes[fieldName] = {"type": "number", "data": [min, max]}
+                                break;
+                        
+                            case "file":
+                                getCard(document.querySelector("#set-card-edit-card-name").value, document.querySelector("#set-card-edit-card-description").innerHTML, function (collectionID, cardID, cardObj) {
+                                    for (let index = 0; index < cardObj.redeemFields.length; index++) {
+                                        if (cardObj.redeemFields[index].name == fieldName){
+                                                if (cardObj.redeemFields[index].type == "TEXTAREA") {
+                                                    additionalFieldTypes[fieldName] = {"type": "file"}
+                                                } else {
+                                                    alert("The File Field Type needs to be applied to a bigger text field. Change the type and try it again.")
+                                                    updateCollectionsUsername()
+                                                }
+                                        }
+                                    }
+                                })
+                                break;
+                        
+                            default:
+                                break;
                         }
-                        console.log(cardObj.redeemFields)
-
-                        var myHeaders = new Headers();
-                        myHeaders.append("Authorization", "Bearer " + getInitialState().auth.authToken);
-                        myHeaders.append("Content-Type", "application/json");
-
-                        var requestOptions = {
-                            method: 'PUT',
-                            headers: myHeaders,
-                            body: JSON.stringify(cardObj),
-                            redirect: 'follow'
-                        };
-
-                        fetch("https://api.streamloots.com/sets/" + collectionID + "/cards/" + cardID, requestOptions)
-                            .then(response => response.json())
-                            .then(result => {
-                                // console.log(result)
-                                alert("Changed " + fieldName + " type of field to " + fieldType + "!")
-                                window.location.reload()
-                                updateCollectionsUsername()
-                            })
-                            .catch(error => console.log('error', error));
-                    })
-                }
-            }
-
-            revertFunction = function (event) {
-                if (event.target.localName != "select") {
-                    var fieldName = ""
-                    try {
-                        fieldName = event.target.children[0].value
-                        if (!fieldName) {throw "fieldNameUndefined";}
-                    } catch (error) {
-                        fieldName = event.target.children[1].children[0].value
-                    }
-                    accept = confirm("This will revert "+fieldName+" to a Text Field.\n\nWant to proceed?")
-                    if (accept) {
+                        
+                        // console.log(optionList)
+    
                         getCard(document.querySelector("#set-card-edit-card-name").value, document.querySelector("#set-card-edit-card-description").innerHTML, function (collectionID, cardID, cardObj) {
                             // console.log(collectionID)
                             // console.log(cardID)
@@ -420,37 +374,100 @@ function clickManager(event) {
                                     try { delete cardObj[element] } catch (error) { }
                                 });
                             } catch (error) { }
-        
+    
                             for (let index = 0; index < cardObj.redeemFields.length; index++) {
+                                const redeemField = cardObj.redeemFields[index];
                                 // console.log(redeemField)
-                                try {
-                                    if (cardObj.redeemFields[index].name == fieldName){
-                                    delete cardObj.redeemFields[index]["additionalFieldTypesLT"]}
-                                } catch (error) {console.log(error)}
+                                if (redeemField.name in additionalFieldTypes) {
+                                    cardObj.redeemFields[index]["additionalFieldTypesLT"] = additionalFieldTypes[redeemField.name]
+                                    // console.log(redeemField)
+                                }
                             }
-                            console.log(cardObj.redeemFields)
-        
+                            // console.log(cardObj.redeemFields)
+    
                             var myHeaders = new Headers();
                             myHeaders.append("Authorization", "Bearer " + getInitialState().auth.authToken);
                             myHeaders.append("Content-Type", "application/json");
-        
+    
                             var requestOptions = {
                                 method: 'PUT',
                                 headers: myHeaders,
                                 body: JSON.stringify(cardObj),
                                 redirect: 'follow'
                             };
-        
+    
                             fetch("https://api.streamloots.com/sets/" + collectionID + "/cards/" + cardID, requestOptions)
                                 .then(response => response.json())
                                 .then(result => {
                                     // console.log(result)
-                                    alert("Reset " + fieldName + " field type to Text!")
+                                    alert("Changed " + fieldName + " type of field to " + fieldType + "!")
+                                    window.location.reload()
                                     updateCollectionsUsername()
                                 })
                                 .catch(error => console.log('error', error));
                         })
                     }
+                } else {
+                    alert("Please save your unsaved Card changes before changing your Field to a custom Type, as they will be lost otherwise.")
+                }
+            }
+
+            revertFunction = function (event) {
+                if (document.querySelectorAll("[class*=toolbox__test]")[0].disabled) {
+                    if (event.target.localName != "select") {
+                        var fieldName = ""
+                        try {
+                            fieldName = event.target.children[0].value
+                            if (!fieldName) {throw "fieldNameUndefined";}
+                        } catch (error) {
+                            fieldName = event.target.children[1].children[0].value
+                        }
+                        accept = confirm("This will revert "+fieldName+" to a Text Field.\n\nWant to proceed?")
+                        if (accept) {
+                            getCard(document.querySelector("#set-card-edit-card-name").value, document.querySelector("#set-card-edit-card-description").innerHTML, function (collectionID, cardID, cardObj) {
+                                // console.log(collectionID)
+                                // console.log(cardID)
+                                // console.log(cardObj)
+                                cardID = cardObj._id
+                                try {
+                                    ["_id", "activatedAt", "archived", "createdAt", "count", "deactivated", "deactivatedAt", "firstActivatedAt", "imageFile", "modifiedAt", "normalizedName", "setId", "status", "usageStatistics", "redemptionLimit"].forEach(element => {
+                                        try { delete cardObj[element] } catch (error) { }
+                                    });
+                                } catch (error) { }
+            
+                                for (let index = 0; index < cardObj.redeemFields.length; index++) {
+                                    // console.log(redeemField)
+                                    try {
+                                        if (cardObj.redeemFields[index].name == fieldName){
+                                        delete cardObj.redeemFields[index]["additionalFieldTypesLT"]}
+                                    } catch (error) {console.log(error)}
+                                }
+                                // console.log(cardObj.redeemFields)
+            
+                                var myHeaders = new Headers();
+                                myHeaders.append("Authorization", "Bearer " + getInitialState().auth.authToken);
+                                myHeaders.append("Content-Type", "application/json");
+            
+                                var requestOptions = {
+                                    method: 'PUT',
+                                    headers: myHeaders,
+                                    body: JSON.stringify(cardObj),
+                                    redirect: 'follow'
+                                };
+            
+                                fetch("https://api.streamloots.com/sets/" + collectionID + "/cards/" + cardID, requestOptions)
+                                    .then(response => response.json())
+                                    .then(result => {
+                                        // console.log(result)
+                                        alert("Reset " + fieldName + " field type to Text!")
+                                        updateCollectionsUsername()
+                                    })
+                                    .catch(error => console.log('error', error));
+                            })
+                        }
+                    }
+                } else {
+                    alert("Please save your unsaved Card changes before changing your Field to a custom Type, as they will be lost otherwise.")
                 }
             }
 
