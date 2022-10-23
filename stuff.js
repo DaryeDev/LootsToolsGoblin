@@ -61,6 +61,40 @@ function tryToLoadToken() {
 }
 tryToLoadToken();
 
+function changeMode(mode) {
+    modes = ["tools", "cards"]
+    modes.forEach(element => {
+        if (element == mode){
+            document.querySelector(`#${element}Mode`).hidden = false;
+        } else {
+            document.querySelector(`#${element}Mode`).hidden = true;
+        }
+    });
+}
+
+document
+    .getElementById("cardsModeButton")
+    .addEventListener("click", function() {
+        chrome.storage.local.set({ mode: "cards" }, function () {changeMode("cards")});
+    });
+
+document
+    .getElementById("toolsModeButton")
+    .addEventListener("click", function() {
+        chrome.storage.local.set({ mode: "tools" }, function () {changeMode("tools")});
+    });
+
+function tryToLoadMode() {
+    chrome.storage.local.get(["mode"], function (resulto) {
+        mode = resulto.mode;
+        if (mode) {
+            changeMode(mode);
+        }
+    });
+}
+tryToLoadMode();
+
+
 function injectToStreamloots() {
     chrome.tabs.query(
         {
