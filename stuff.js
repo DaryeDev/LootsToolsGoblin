@@ -388,8 +388,9 @@ function useCard(collectionID, cardID, redeemFields, callback=function() {}) {
 
 var streamerSearcherInput = document.getElementById("streamerSearcherInput");
 var streamerSearcherButton = document.getElementById("streamerSearcherButton");
-var streamerName = ""
+var streamerName = "";
 var gotoStreamlootsPageButton = document.getElementById("gotoStreamlootsPageButton");
+var waitingForRenaming = false;
 
 streamerSearcherInput.addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
@@ -400,6 +401,23 @@ streamerSearcherInput.addEventListener("keypress", function(event) {
 
 streamerSearcherButton.addEventListener("click", function(event) {
     streamerName = streamerSearcherInput.value
+    if (waitingForRenaming) {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            domain = tabs[0].url.match(/^[\w-]+:\/{2,}\[?([\w\.:-]+)\]?(?::[0-9]*)?/)[1];
+            if (domain.includes("twitch.tv")) {
+                streamName = tabs[0].url.substring(tabs[0].url.indexOf("/", 8)+1)
+                chrome.storage.sync.get(["renaming"], function (resulto) {
+                    renaming = resulto.renaming;
+                    if (!renaming) {
+                        renaming = {};
+                    } 
+                    renaming[streamName] = streamerName
+                    chrome.storage.sync.set({ renaming: renaming }, function () { });
+                    waitingForRenaming = false
+                });
+            }
+        });
+    }
     searchStreamer(streamerName, injectCards)
 });
 
@@ -425,6 +443,26 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
             if (collections) {
                 streamerSearcherInput.value = streamName;
                 injectCards(collections)
+            } else {
+                chrome.storage.sync.get(["renaming"], function (resulto) {
+                    renaming = resulto.renaming;
+                    if (renaming) {
+                        searchStreamer(renaming[streamName], function(collections) {
+                            if (collections) {
+                                streamerSearcherInput.value = renaming[streamName];
+                                injectCards(collections)
+                            } else {
+                                alert("The streamer was not found by Twitch Name, please enter it manually.\n(It will be saved for the next time)")
+                                waitingForRenaming = true
+                            }
+                        })
+                    } else {
+                        chrome.storage.sync.set({ renaming: {} }, function () {
+                            alert("The streamer was not found by Twitch Name, please enter it manually.\n(It will be saved for the next time)")
+                            waitingForRenaming = true
+                        });
+                    }
+                });
             }
         })
     }
