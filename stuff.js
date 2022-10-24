@@ -297,6 +297,7 @@ function injectCards(collections) {
         collectionDiv.id = "collection"+String(collectionNo)
         collectionDiv.style = "margin-left: -5px;grid-template-columns: repeat(3, 1fr);grid-column-gap: 10px;grid-row-gap: 0px;display:"+ ((collectionNo != 0) ? "none" : "grid")
 
+        notOwnedCards = []
         collection.cards.forEach(card => {
             cardsObj[card._id] = card
             cardDiv = document.createElement("span")
@@ -307,11 +308,14 @@ function injectCards(collections) {
             try {
                 if (card.count.redeemable > 0){
                     cardAvailableHTML = `<p cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" style="float: left;position: absolute;margin: 0;background: #474747;padding: 5px;color: white;border-radius: 10px;font-weight: bold;">${card.count.redeemable}</p>`;
+                    owning = true
                 } else {
                     cardAvailableHTML = "";
+                    owning = false
                 }
             } catch (error) {
                 cardAvailableHTML = "";
+                owning = false
             }
             
             
@@ -341,6 +345,14 @@ function injectCards(collections) {
                     useCard(collectionID, cardID, redeemFields, function () {searchStreamer(document.getElementById("streamerSearcherInput").value, injectCards)})
                 }
             })
+            if (owning) {
+                collectionDiv.appendChild(cardDiv)
+            } else {
+                notOwnedCards.push(cardDiv)
+            }
+        })
+
+        notOwnedCards.forEach(cardDiv => {
             collectionDiv.appendChild(cardDiv)
         })
 
