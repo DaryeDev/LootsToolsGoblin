@@ -89,63 +89,17 @@
                 <div id="streamerSearcher">
                     <label for="streamerSearcherInput">Search your streamer: </label>
                     <input id="streamerSearcherInput" type="text">
+                    <button id="streamerSearcherButton">&#10003;</button>
                 </div>
                 <div id="collectionSelector">
                     <label for="collectionSelector">Collection: </label>
-                    <select name="Sel" id="collectionSelector">
+                    <select name="Sel" id="collectionSelectorSelect">
                         <option value="" disabled>Select a Collection!</option>
                     </select>
                 </div>
                 <hr>
+                <button style="width: 100%;margin-bottom: 20px;" id="gotoStreamlootsPageButton" disabled>Go to Streamloots Page</button>
                 <div id="cardsGrid">
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
-                    <span v-for="card in item.cards" :key="card.id" style="display: inline-block;width: 124px;margin:20px;" :cardid="card.cardID" :collectionid="item.collectionID">
-                        <img src="https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_240,q_90/uploads/5db8a8676cf468002d408b58/9f378ce9-cd47-4188-a746-5daddcce19c9.png" alt="card.cardName" id="itemImg" style="width: 124px;text-align:center">
-                        <p style="text-align: center;">{{ card.cardName }}</p>
-                    </span>
                 </div>
             </div>
         </div>

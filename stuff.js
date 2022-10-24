@@ -250,3 +250,170 @@ function loginToLootsTools() {
         }
     }
 }
+
+function searchStreamer(streamer, callback) {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer "+token);
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+        };
+
+    fetch("https://api.streamloots.com/pages/"+streamer+"/sets", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            jsonResult = JSON.parse(result)
+            // console.log(jsonResult)
+            try {
+                callback(jsonResult.data)
+                
+                gotoStreamlootsPageButton.disabled = false
+            } catch (error) {
+                console.log("nay nay tete: "+error)
+                gotoStreamlootsPageButton.disabled = true
+            }
+        })
+        .catch(error => console.log('error', error));
+}
+
+var cardsObj = []
+function injectCards(collections) {
+    var collectionSelector = document.getElementById("collectionSelectorSelect")
+    var cardsGrid = document.getElementById("cardsGrid")
+
+    collectionSelector.innerHTML = ""
+    cardsGrid.innerHTML = ""
+
+    collectionNo = 0
+    collections.forEach(collection => {
+        collectionOption = document.createElement("option")
+        collectionOption.value = "collection"+String(collectionNo)
+        collectionOption.text = collection.name
+        collectionSelector.appendChild(collectionOption)
+
+        collectionDiv = document.createElement("div")
+        collectionDiv.id = "collection"+String(collectionNo)
+        collectionDiv.style = "margin-left: -5px;grid-template-columns: repeat(3, 1fr);grid-column-gap: 10px;grid-row-gap: 0px;display:"+ ((collectionNo != 0) ? "none" : "grid")
+
+        collection.cards.forEach(card => {
+            cardsObj[card._id] = card
+            cardDiv = document.createElement("span")
+            cardDiv.id = cardDiv.className = "card"+card._id
+            cardDiv.setAttribute("cardid", card._id)
+            cardDiv.setAttribute("cardname", card.name)
+            cardDiv.setAttribute("collectionid", collection.collectionId)
+            try {
+                if (card.count.redeemable > 0){
+                    cardAvailableHTML = `<p cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" style="float: left;position: absolute;margin: 0;background: #474747;padding: 5px;color: white;border-radius: 10px;font-weight: bold;">${card.count.redeemable}</p>`;
+                } else {
+                    cardAvailableHTML = "";
+                }
+            } catch (error) {
+                cardAvailableHTML = "";
+            }
+            
+            
+            cardDiv.innerHTML = `
+                ${cardAvailableHTML}
+                <img src="${card.imageUrl}" alt="${card.name}" cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" class="cardImg" style="width: 124px;text-align:center;">
+                <p cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" style="text-align: center;">${card.name}</p>`
+            cardDiv.style = "display: inline-block;width: 124px;margin:20px;margin-top:0px;margin-bottom:0px"
+            cardDiv.addEventListener("click", function(event) {
+                cardName = event.target.getAttribute("cardname")
+                cardID = event.target.getAttribute("cardid")
+                collectionID = event.target.getAttribute("collectionid")
+                if (confirm(`Use ${cardName}?`)) {
+                    console.log(cardsObj[cardID].redeemFields)
+                    redeemFields = []
+                    if (cardsObj[cardID].redeemFields.length != 0){
+                        cardsObj[cardID].redeemFields.forEach(field => {
+                            redeemFields.push({
+                                "required": field.required,
+                                "label": field.label,
+                                "name": field.name,
+                                "type": field.type,
+                                "value": prompt(field.label)
+                            })
+                        })
+                    }
+                    useCard(collectionID, cardID, redeemFields, function () {searchStreamer(document.getElementById("streamerSearcherInput").value, injectCards)})
+                }
+            })
+            collectionDiv.appendChild(cardDiv)
+        })
+
+        cardsGrid.appendChild(collectionDiv)
+        collectionNo++
+    });
+
+    console.log(collections)
+}
+
+function useCard(collectionID, cardID, redeemFields, callback=function() {}) {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer "+token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+        "setCardId": cardID,
+        "redeemFields": redeemFields
+    });
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+
+    fetch("https://api.streamloots.com/collections/"+collectionID+"/redemptions", requestOptions)
+        .then(response => response.text())
+        .then(result => {callback()})
+        .catch(error => console.log('error', error));
+}
+
+var streamerSearcherInput = document.getElementById("streamerSearcherInput");
+var streamerSearcherButton = document.getElementById("streamerSearcherButton");
+var streamerName = ""
+var gotoStreamlootsPageButton = document.getElementById("gotoStreamlootsPageButton");
+
+streamerSearcherInput.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        streamerSearcherButton.click();
+    }
+});
+
+streamerSearcherButton.addEventListener("click", function(event) {
+    streamerName = streamerSearcherInput.value
+    searchStreamer(streamerName, injectCards)
+});
+
+gotoStreamlootsPageButton.addEventListener("click", function(event) {
+    chrome.tabs.create({ url: "https://www.streamloots.com/"+streamerSearcherInput.value });
+});
+
+document.getElementById("collectionSelectorSelect").addEventListener("change", function(event) {
+    document.querySelector("#cardsGrid").childNodes.forEach(element => {
+        if (element.id == document.getElementById("collectionSelectorSelect").value) {
+            element.style.display = "grid"
+        } else {
+            element.style.display = "none"
+        }
+    })
+})
+
+chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    domain = tabs[0].url.match(/^[\w-]+:\/{2,}\[?([\w\.:-]+)\]?(?::[0-9]*)?/)[1];
+    if (domain.includes("twitch.tv")) {
+        streamName = tabs[0].url.substring(tabs[0].url.indexOf("/", 8)+1)
+        searchStreamer(streamName, function(collections) {
+            if (collections) {
+                streamerSearcherInput.value = streamName;
+                injectCards(collections)
+            }
+        })
+    }
+})
