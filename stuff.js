@@ -136,6 +136,9 @@ function injectToStreamloots() {
                     break;
                 } else {
                     alert("You need to use this Extension on a Streamloots' page.");
+                    window.open("https://streamloots.com/collections", '_blank').focus(); //TEST
+                    // chrome.tabs.create({url:"https://streamloots.com/collections"})
+
                 }
             }
         }
