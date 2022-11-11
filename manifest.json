@@ -23,5 +23,11 @@
     ],
     "background": {
       "scripts": ["background.js"]
+    },
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "browserCompanion@darye.dev"
+      }
     }
+    
   }
