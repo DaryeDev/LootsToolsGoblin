@@ -228,12 +228,12 @@ function clickManager(event) {
     // console.log(event.target)
     try {
         try {
-            var testCardClicked = (document.querySelectorAll("[class*=toolbox__content]")[2].innerHTML.includes(event.path[0].innerHTML) && event.path[0].innerHTML.toLowerCase().includes("test"));
+            var testCardClicked = document.querySelectorAll("[class*=toolbox__content]")[2].innerHTML.includes(event.target.innerHTML) && (event.target.innerHTML.toLowerCase().includes("test") || event.target.innerHTML.toLowerCase().includes("probar"));
         } catch (error) {
             var testCardClicked = false;
         }
         try {
-            var editCardClicked = document.querySelectorAll("[class*=toolbox__content]")[2].innerHTML.includes(event.path[0].innerHTML) && event.path[0].innerHTML.toLowerCase().includes("edit");
+            var editCardClicked = document.querySelectorAll("[class*=toolbox__content]")[2].innerHTML.includes(event.target.innerHTML) && event.target.innerHTML.toLowerCase().includes("edit");
         } catch (error) {
             var editCardClicked = false;
         }

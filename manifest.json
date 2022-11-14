@@ -19,7 +19,8 @@
       "tabs",
       "scripting",
       "storage",
-      "alarms"
+      "alarms",
+      "*://*.streamloots.com/*"
     ],
     "background": {
       "scripts": ["background.js"]
