@@ -236,7 +236,7 @@ function loginToLootsTools() {
     if (token) {
         if (getLang().includes("es")) {
             optionText =
-                "Estás a punto de compartir tu token de Streamloots con Loot's Tools.\n\nEsto cede acceso a tu cuenta de Streamloots.\nSin embargo, Loot's Tools solo usará el token para iniciar sesión, conseguir información básica y llevar a cabo algunas acciones (Regalar cofres, por ejemplo) que el usuario decida con eventos (Cartas o Ventas de Cofres), y nunca se usará o mandará a más que a Streamloots desde esta herramienta.\n\n¿Quieres continuar?";
+                "Estas a punto de compartir tu token de Streamloots con Loot's Tools.\n\nEsto cede acceso a tu cuenta de Streamloots.\nSin embargo, Loot's Tools solo usara el token para iniciar sesion, conseguir informacion basica y llevar a cabo algunas acciones (Regalar cofres, por ejemplo) que el usuario decida con eventos (Cartas o Ventas de Cofres), y nunca se usara o mandara a mas que a Streamloots desde esta herramienta.\n\n¿Quieres continuar?";
         } else {
             optionText =
                 "You are about to share your Streamloots's Token with Loot's Tools.\n\nThis gives access to your Streamloots' Account. \nHowever, Loot's Tools will only use the token lo log in, get basic information and execute some actions (Gift Packs, for example) that the user wants to be called with events (Card redeems and sold Packs), and will never be used or sent to anyone but Streamloots from there.\n\nContinue?";
@@ -411,6 +411,7 @@ streamerSearcherInput.addEventListener("keypress", function(event) {
 });
 
 streamerSearcherButton.addEventListener("click", function(event) {
+    streamerSearcherInput.blur()
     streamerName = streamerSearcherInput.value
     if (waitingForRenaming) {
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
