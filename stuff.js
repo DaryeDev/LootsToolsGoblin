@@ -461,7 +461,6 @@ browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (domain.includes("twitch.tv")) {
         streamName = tabs[0].url.substring(tabs[0].url.indexOf("/", 8)+1)
         if (streamName.includes("/")){
-            debugger
             streamName = streamName.substring(0, streamName.indexOf("/", 0))
         }
         searchStreamer(streamName, function(collections) {

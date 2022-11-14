@@ -1,6 +1,6 @@
 {
     "name": "Loot's Tools Browser Companion",
-    "version": "2",
+    "version": "2.5",
     "manifest_version": 2,
     "author": "Darye",
     "description": "Enhance your Streamloots experience and login to Loot's Tools with Loot's Tools Browser Companion.",
@@ -28,6 +28,11 @@
       "gecko": {
         "id": "browserCompanion@darye.dev"
       }
-    }
-    
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://*.streamloots.com/*"],
+        "js": ["additionalFieldTypes.js"]
+      }
+    ]
   }
