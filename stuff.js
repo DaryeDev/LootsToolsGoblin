@@ -33,6 +33,12 @@ document
         browser.tabs.create({url:"lootstools://init"})
     });
 
+document
+    .getElementById("darkModeButton")
+    .addEventListener("click", function () {
+        document.body.classList.toggle('darkTheme');  
+    });
+
 document.getElementById("logoutButton").addEventListener("click", function () {
     browser.storage.sync.set({ token: false }, function () { });
     browser.storage.local.set({ userInfo: false }, function () { });

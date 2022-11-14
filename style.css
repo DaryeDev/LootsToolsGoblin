@@ -50,3 +50,12 @@ body {
     text-align: center;
     margin-top: 0;
 }
+
+/* Dark Theme Stuff */
+body.darkTheme {background-color: #18181b;}
+body.darkTheme button { border: none; background: none; color: mediumpurple; border-bottom-color: mediumpurple; border-bottom-width: 2px; border-bottom-style: solid;}
+body.darkTheme input { border: none; background: none; color: mediumpurple; border-bottom-color: mediumpurple; border-bottom-width: 2px; border-bottom-style: solid;}
+body.darkTheme input, body.darkTheme select, body.darkTheme textarea, body.darkTheme button{font-family:inherit;}
+body.darkTheme p, body.darkTheme label, body.darkTheme h1, body.darkTheme h2 {color: white;}
+body.darkTheme select {border-color: mediumpurple; border-radius: 5px; color: white; background: #18181b;}
+body.darkTheme .cardQuantity {background: #303030;}
