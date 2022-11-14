@@ -339,21 +339,30 @@ function injectCards(collections) {
                     cardName = event.target.getAttribute("cardname")
                     cardID = event.target.getAttribute("cardid")
                     collectionID = event.target.getAttribute("collectionid")
+                    useCardFlag = false
                     if (confirm(`Use ${cardName}?`)) {
+                        useCardFlag = true
                         console.log(cardsObj[cardID].redeemFields)
                         redeemFields = []
                         if (cardsObj[cardID].redeemFields.length != 0){
                             cardsObj[cardID].redeemFields.forEach(field => {
-                                redeemFields.push({
-                                    "required": field.required,
-                                    "label": field.label,
-                                    "name": field.name,
-                                    "type": field.type,
-                                    "value": prompt(field.label)
-                                })
+                                redeemFieldValue = prompt(field.label)
+                                if (redeemFieldValue) {
+                                    redeemFields.push({
+                                        "required": field.required,
+                                        "label": field.label,
+                                        "name": field.name,
+                                        "type": field.type,
+                                        "value": redeemFieldValue
+                                    })
+                                } else {
+                                    useCardFlag = false
+                                }
                             })
                         }
-                        useCard(collectionID, cardID, redeemFields, function () {searchStreamer(document.getElementById("streamerSearcherInput").value, injectCards)})
+                        if (useCardFlag) {
+                            useCard(collectionID, cardID, redeemFields, function () {searchStreamer(document.getElementById("streamerSearcherInput").value, injectCards)})
+                        }
                     }
                 })
 
