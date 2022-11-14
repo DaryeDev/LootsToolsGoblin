@@ -33,6 +33,12 @@ document
         chrome.tabs.create({url:"lootstools://init"})
     });
 
+    document
+        .getElementById("darkModeButton")
+        .addEventListener("click", function () {
+            document.body.classList.toggle('darkTheme');  
+        });
+
 document.getElementById("logoutButton").addEventListener("click", function () {
     chrome.storage.sync.set({ token: false }, function () { });
     chrome.storage.local.set({ userInfo: false }, function () { });
@@ -222,8 +228,6 @@ function loadInfoToExtension(token, forceReload=false) {
         });
     }
 
-    
-
     document.getElementById("notLoggedIn").hidden = true;
     document.getElementById("loggedIn").hidden = false;
 }
@@ -255,30 +259,32 @@ function loginToLootsTools() {
 }
 
 function searchStreamer(streamer, callback) {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer "+token);
+    if (streamer != "") {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer "+token);
 
-    var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-        };
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+            };
 
-    fetch("https://api.streamloots.com/pages/"+streamer+"/sets", requestOptions)
-        .then(response => response.text())
-        .then(result => {
-            jsonResult = JSON.parse(result)
-            // console.log(jsonResult)
-            try {
-                callback(jsonResult.data)
-                
-                gotoStreamlootsPageButton.disabled = false
-            } catch (error) {
-                console.log("nay nay tete: "+error)
-                gotoStreamlootsPageButton.disabled = true
-            }
-        })
-        .catch(error => console.log('error', error));
+        fetch("https://api.streamloots.com/pages/"+streamer+"/sets", requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                jsonResult = JSON.parse(result)
+                // console.log(jsonResult)
+                try {
+                    callback(jsonResult.data)
+                    
+                    gotoStreamlootsPageButton.disabled = false
+                } catch (error) {
+                    console.log("nay nay tete: "+error)
+                    gotoStreamlootsPageButton.disabled = true
+                }
+            })
+            .catch(error => console.log('error', error));
+    }
 }
 
 var cardsObj = []
@@ -302,6 +308,7 @@ function injectCards(collections) {
 
         notOwnedCards = []
         collection.cards.forEach(card => {
+            var owning = false
             cardsObj[card._id] = card
             cardDiv = document.createElement("span")
             cardDiv.id = cardDiv.className = "card"+card._id
@@ -310,45 +317,46 @@ function injectCards(collections) {
             cardDiv.setAttribute("collectionid", collection.collectionId)
             try {
                 if (card.count.redeemable > 0){
-                    cardAvailableHTML = `<p cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" style="float: left;position: absolute;margin: 0;background: #474747;padding: 5px;color: white;border-radius: 10px;font-weight: bold;">${card.count.redeemable}</p>`;
+                    cardAvailableHTML = `<p cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" class="cardQuantity">x${card.count.redeemable}</p>`;
                     owning = true
                 } else {
-                    cardAvailableHTML = "";
+                    cardAvailableHTML = `<p cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" class="cardQuantity notOwned">x${card.count.redeemable}</p>`;
                     owning = false
                 }
             } catch (error) {
-                cardAvailableHTML = "";
+                cardAvailableHTML = `<p cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" class="cardQuantity notOwned">x0</p>`;
                 owning = false
             }
             
             
             cardDiv.innerHTML = `
                 ${cardAvailableHTML}
-                <img src="${card.imageUrl}" alt="${card.name}" cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" class="cardImg" style="width: 124px;text-align:center;">
-                <p cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" style="text-align: center;">${card.name}</p>`
+                <img src="${card.imageUrl}" alt="${card.name}" cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" class="cardImage${owning? '':' notOwned'}" style="width: 124px;text-align:center;">
+                <p cardid="${card._id}" cardname="${card.name}" collectionid="${collection.collectionId}" style="text-align: center;margin-top: 0;">${card.name}</p>`
             cardDiv.style = "display: inline-block;width: 124px;margin:20px;margin-top:0px;margin-bottom:0px"
-            cardDiv.addEventListener("click", function(event) {
-                cardName = event.target.getAttribute("cardname")
-                cardID = event.target.getAttribute("cardid")
-                collectionID = event.target.getAttribute("collectionid")
-                if (confirm(`Use ${cardName}?`)) {
-                    console.log(cardsObj[cardID].redeemFields)
-                    redeemFields = []
-                    if (cardsObj[cardID].redeemFields.length != 0){
-                        cardsObj[cardID].redeemFields.forEach(field => {
-                            redeemFields.push({
-                                "required": field.required,
-                                "label": field.label,
-                                "name": field.name,
-                                "type": field.type,
-                                "value": prompt(field.label)
-                            })
-                        })
-                    }
-                    useCard(collectionID, cardID, redeemFields, function () {searchStreamer(document.getElementById("streamerSearcherInput").value, injectCards)})
-                }
-            })
             if (owning) {
+                cardDiv.addEventListener("click", function(event) {
+                    cardName = event.target.getAttribute("cardname")
+                    cardID = event.target.getAttribute("cardid")
+                    collectionID = event.target.getAttribute("collectionid")
+                    if (confirm(`Use ${cardName}?`)) {
+                        console.log(cardsObj[cardID].redeemFields)
+                        redeemFields = []
+                        if (cardsObj[cardID].redeemFields.length != 0){
+                            cardsObj[cardID].redeemFields.forEach(field => {
+                                redeemFields.push({
+                                    "required": field.required,
+                                    "label": field.label,
+                                    "name": field.name,
+                                    "type": field.type,
+                                    "value": prompt(field.label)
+                                })
+                            })
+                        }
+                        useCard(collectionID, cardID, redeemFields, function () {searchStreamer(document.getElementById("streamerSearcherInput").value, injectCards)})
+                    }
+                })
+
                 collectionDiv.appendChild(cardDiv)
             } else {
                 notOwnedCards.push(cardDiv)
@@ -442,6 +450,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     domain = tabs[0].url.match(/^[\w-]+:\/{2,}\[?([\w\.:-]+)\]?(?::[0-9]*)?/)[1];
     if (domain.includes("twitch.tv")) {
         streamName = tabs[0].url.substring(tabs[0].url.indexOf("/", 8)+1)
+        if (streamName.includes("/")){
+            streamName = streamName.substring(0, streamName.indexOf("/", 0))
+        }
         searchStreamer(streamName, function(collections) {
             if (collections) {
                 streamerSearcherInput.value = streamName;

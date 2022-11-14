@@ -3,7 +3,6 @@ var SLTab = null;
 var token = false;
 
 
-
 function handleMessage(request, sender, sendResponse) {
     if ("sendTokenToLootsTools" in request){
         loginToLootsTools(request.sendTokenToLootsTools)
@@ -166,21 +165,15 @@ function loginToLootsTools(token = false) {
                     if (tokenSent == false) {
                         if (tries == 0) {
                             tries += 1;
-                            chrome.tabs.query(
-                                { currentWindow: true, active: true },
-                                function (tab) {
-                                    chrome.tabs.query(
-                                        { url: "https://lootstools.darye.dev/" },
-                                        function (tabs) {
-                                            if (tabs.length == 0) {
-                                                chrome.tabs.create({ url: "lootstools://" });
-                                            } else {
-                                                chrome.tabs.create({ url: "lootstools://init" });
-                                            }
-                                        }
-                                    );
-                                }
-                            );
+                            chrome.tabs.query({currentWindow: true, active: true}, function (tab) {
+                                chrome.tabs.query({url: "https://lootstools.darye.dev/"}, function (tabs) {
+                                    if (tabs.length == 0) {
+                                        chrome.tabs.create({ url: "lootstools://" });
+                                    } else {
+                                        chrome.tabs.create({ url: "lootstools://init" });
+                                    }
+                                });
+                            });
                         }
                         chrome.alarms.create({ delayInMinutes: 0.00833333 });
 
