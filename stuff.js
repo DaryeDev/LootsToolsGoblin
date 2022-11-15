@@ -362,16 +362,19 @@ function injectCards(collections) {
                         if (cardsObj[cardID].redeemFields.length != 0){
                             cardsObj[cardID].redeemFields.forEach(field => {
                                 redeemFieldValue = prompt(field.label)
-                                if (redeemFieldValue) {
-                                    redeemFields.push({
-                                        "required": field.required,
-                                        "label": field.label,
-                                        "name": field.name,
-                                        "type": field.type,
-                                        "value": redeemFieldValue
-                                    })
-                                } else {
-                                    useCardFlag = false
+                                if (useCardFlag) {
+                                    redeemFieldValue = prompt(field.label)
+                                    if (redeemFieldValue) {
+                                        redeemFields.push({
+                                            "required": field.required,
+                                            "label": field.label,
+                                            "name": field.name,
+                                            "type": field.type,
+                                            "value": redeemFieldValue
+                                        })
+                                    } else {
+                                        useCardFlag = false
+                                    }
                                 }
                             })
                         }
