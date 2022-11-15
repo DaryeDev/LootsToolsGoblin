@@ -535,7 +535,7 @@ function qLogin() {
             code = JSON.parse(event.data).code
             document.getElementById("qLoginCode").innerText = code
             document.getElementById("qLoginQR").innerHTML = ""
-            var qrcode = new QRCode(document.getElementById("qLoginQR"), {
+            new QRCode(document.getElementById("qLoginQR"), {
                 text: code,
                 width: 175,
                 height: 175,
@@ -543,6 +543,7 @@ function qLogin() {
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.L
             });
+            document.getElementById("qLoginQR").title = ""
         };
     } catch (error) {
         chrome.alarms.create({ delayInMinutes: 0.1666667 });
