@@ -7,6 +7,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&display=swap" rel="stylesheet">
         <link href="style.css" rel="stylesheet">
+        <script type="text/javascript" src="qrcode.js"></script>
         <style>
             hr {
                 margin-top: 6px;
@@ -30,6 +31,12 @@
                 <button id="toolsModeButton">Tools</button>
             </div>
             <hr>
+            <div id="qLogin" style="position: absolute;height: 100%;width: 100%;background: #18181b; z-index: 2;display: none;left: 0px;">
+                <h2 style="text-align: center; margin: auto;margin-top: 20px;">Scan with a Loot's Tools qLogin Reader<br>to log in!</h2>
+                <p id="qLoginCode" hidden></p>
+                <div id="qLoginQR" style="height: 175px;width: 175px;border-width: 20px;border-style: solid;border-color: #ffffff;background-color: #ffffff;border-radius: 25px;margin: auto;margin-bottom: 25px;margin-top: 25px;"></div>
+                <p id="qLoginExitButton" style="text-align: center;font-size: 15px;background: mediumpurple;border-width: 10px;border-style: solid;border-color: mediumpurple;border-radius: 25px;width: 100px;margin: auto;">Close</p>
+            </div>
             <div id="toolsMode" style="font-family: 'Montserrat', sans-serif;width: 500px;">
                 <div id="title" style="display: block;margin-left: auto;margin-right: auto;width: 442px;">
                     <img src="https://lootstools.darye.dev/docs/NEW_Logo.svg" alt="" style="height: 50px;">
@@ -92,6 +99,14 @@
                     <div id="utilsSection">
                         <button id="syncStreamlootsDiscordButton">Sync Streamloots - Discord</button>
                         <button id="syncStreamlootsTwitchButton">Sync Streamloots - Twitch</button>
+                    </div>
+                    <br id="utilsBr">
+                </div>
+                <hr>
+                <div id="others">
+                    <h2 id="othersTitle">Others:</h2>
+                    <div id="othersSection">
+                        <button id="qLoginShowCode">Show qLogin Code</button>
                     </div>
                     <br id="utilsBr">
                 </div>
