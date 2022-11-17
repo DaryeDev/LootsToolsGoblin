@@ -48,11 +48,11 @@ document
         chrome.tabs.create({url:"lootstools://init"})
     });
 
-    document
-        .getElementById("darkModeButton")
-        .addEventListener("click", function () {
-            document.body.classList.toggle('darkTheme');  
-        });
+document
+    .getElementById("darkModeButton")
+    .addEventListener("click", function () {
+        document.body.classList.toggle('darkTheme');  
+    });
 
 document.getElementById("logoutButton").addEventListener("click", function () {
     chrome.storage.sync.set({ token: false }, function () { });
@@ -509,6 +509,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         })
     }
 })
+
 function qLoginKillAll() {
     qLoginConnectionsList.forEach(socket => {
         try {
