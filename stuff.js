@@ -2,10 +2,25 @@ var domain = "";
 var SLTab = null;
 var token = false;
 var userInfo = false
+var qLoginConnectionsList = []
 
 document
     .getElementById("loginButton")
     .addEventListener("click", injectToStreamloots);
+
+document
+    .getElementById("qLoginExitButton")
+    .addEventListener("click", function () {
+        qLoginKillAll()
+        document.getElementById("qLogin").style.display = "none"
+    });
+
+document
+    .getElementById("qLoginShowCode")
+    .addEventListener("click", function () {
+        qLogin();
+        document.getElementById("qLogin").style.display = "block"
+    });
 
 document
     .getElementById("reloadUserInfoButton")
@@ -433,6 +448,7 @@ streamerSearcherInput.addEventListener("keypress", function(event) {
 });
 
 streamerSearcherButton.addEventListener("click", function(event) {
+    streamerSearcherInput.blur()
     streamerName = streamerSearcherInput.value
     if (waitingForRenaming) {
         browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -503,3 +519,48 @@ browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         })
     }
 })
+
+function qLoginKillAll() {
+    qLoginConnectionsList.forEach(socket => {
+        try {
+            socket.close()
+        } catch (error) {
+            console.log(error)
+        }
+    });
+    qLoginConnectionsList = []
+}
+
+function qLogin() {
+    qLoginKillAll()
+    try {
+        var socket = new WebSocket("wss://qlogin.fly.dev/create");
+        socket.onopen = function (e) {
+            qLoginConnectionsList.push(socket)
+            socket.send(`{"token":"${token}"}`);
+        };
+        socket.onclose = function (event) {
+            document.getElementById("qLoginQR").innerHTML = document.getElementById("qLoginCode").innerText = ""
+        };
+        socket.onmessage = function (event) {
+            code = JSON.parse(event.data).code
+            document.getElementById("qLoginCode").innerText = code
+            document.getElementById("qLoginQR").innerHTML = ""
+            new QRCode(document.getElementById("qLoginQR"), {
+                text: code,
+                width: 175,
+                height: 175,
+                colorDark : "#303030",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.L
+            });
+            document.getElementById("qLoginQR").title = ""
+        };
+    } catch (error) {
+        chrome.alarms.create({ delayInMinutes: 0.1666667 });
+
+        chrome.alarms.onAlarm.addListener(() => {
+            qLogin()
+        });
+    }
+}
