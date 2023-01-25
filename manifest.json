@@ -1,6 +1,6 @@
 {
     "name": "Loot's Tools Browser Companion",
-    "version": "2.6.1",
+    "version": "2.6.2",
     "manifest_version": 3,
     "author": "Darye",
     "description": "Use your Streamloots Cards without leaving the Stream, Enhance your Streamloots experience and login to Loot's Tools.",
@@ -32,7 +32,7 @@
       "ids": [],
       "matches": [
         "https://*.darye.dev/*",
-        "https://dysontools.herokuapp.com/*"
+        "https://dysontoolsserver.fly.dev/*"
       ],
       "accepts_tls_channel_id": false
     },
