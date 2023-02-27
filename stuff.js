@@ -371,7 +371,6 @@ function injectCards(collections) {
                         redeemFields = []
                         if (cardsObj[cardID].redeemFields.length != 0){
                             cardsObj[cardID].redeemFields.forEach(field => {
-                                redeemFieldValue = prompt(field.label)
                                 if (useCardFlag) {
                                     redeemFieldValue = prompt(field.label)
                                     if (redeemFieldValue) {
